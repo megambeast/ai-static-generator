@@ -1,6 +1,16 @@
-
 {
   "version": 2,
-  "builds": [{ "src": "api/generate.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/api/generate", "dest": "api/generate.js" }]
+  "builds": [
+    { "src": "api/generate.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/generate", "dest": "api/generate.js" }
+  ],
+  "functions": {
+    "api/generate.js": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 10,
+      "memory": 512
+    }
+  }
 }
