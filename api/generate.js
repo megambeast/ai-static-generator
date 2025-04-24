@@ -1,12 +1,12 @@
-// Minimal Puppeteer API for Vercel — no logo, no font, for debugging
-
 const chromium = require('chrome-aws-lambda');
 
 module.exports = async (req, res) => {
+  const executablePath = await chromium.executablePath || '/usr/bin/chromium-browser';
+
   const browser = await chromium.puppeteer.launch({
     args: chromium.args,
     defaultViewport: { width: 1080, height: 1080 },
-    executablePath: await chromium.executablePath,
+    executablePath,
     headless: chromium.headless,
   });
 
