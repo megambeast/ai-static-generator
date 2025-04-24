@@ -1,4 +1,4 @@
-// Cloud-ready Puppeteer API for static image generation using Vercel + GitHub
+// Cloud-ready Puppeteer API for static image generation using Vercel + GitHub (no product image)
 
 // 1. Dependencies:
 // npm install puppeteer-core chrome-aws-lambda fs-extra
@@ -6,6 +6,15 @@
 const chromium = require('chrome-aws-lambda');
 const fs = require('fs-extra');
 const path = require('path');
+
+function safeRead(filePath) {
+  try {
+    return fs.readFileSync(filePath).toString('base64');
+  } catch (e) {
+    console.error('File missing:', filePath);
+    return '';
+  }
+}
 
 module.exports = async (req, res) => {
   const browser = await chromium.puppeteer.launch({
@@ -17,13 +26,13 @@ module.exports = async (req, res) => {
 
   const page = await browser.newPage();
 
-  const html = \`
+  const html = `
     <html>
     <head>
       <style>
         @font-face {
           font-family: 'BrandFont';
-          src: url("data:font/ttf;base64,\${fs.readFileSync(path.resolve('./fonts/BrandFont.ttf')).toString('base64')}");
+          src: url("data:font/ttf;base64,${safeRead(path.resolve('./fonts/BrandFont.ttf'))}");
         }
         body {
           margin: 0;
@@ -32,12 +41,6 @@ module.exports = async (req, res) => {
           height: 1080px;
           position: relative;
           background: white;
-        }
-        .image {
-          position: absolute;
-          top: 60px;
-          left: 60px;
-          width: 400px;
         }
         .headline {
           position: absolute;
@@ -56,12 +59,11 @@ module.exports = async (req, res) => {
       </style>
     </head>
     <body>
-      <img src="data:image/png;base64,\${fs.readFileSync(path.resolve('./assets/product.png')).toString('base64')}" class="image" />
       <div class="headline">20% OFF</div>
-      <img src="data:image/svg+xml;base64,\${fs.readFileSync(path.resolve('./assets/logo.svg')).toString('base64')}" class="logo" />
+      <img src="data:image/svg+xml;base64,${safeRead(path.resolve('./assets/logo.svg'))}" class="logo" />
     </body>
     </html>
-  \`;
+  `;
 
   await page.setContent(html);
   const buffer = await page.screenshot({ type: 'png' });
