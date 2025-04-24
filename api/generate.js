@@ -27,42 +27,31 @@ module.exports = async (req, res) => {
   const page = await browser.newPage();
 
   const html = `
-    <html>
-    <head>
-      <style>
-        @font-face {
-          font-family: 'BrandFont';
-          src: url("data:font/ttf;base64,${safeRead(path.resolve('./fonts/BrandFont.ttf'))}");
-        }
-        body {
-          margin: 0;
-          font-family: 'BrandFont', sans-serif;
-          width: 1080px;
-          height: 1080px;
-          position: relative;
-          background: white;
-        }
-        .headline {
-          position: absolute;
-          top: 400px;
-          left: 60px;
-          font-size: 72px;
-          font-weight: bold;
-          color: #000;
-        }
-        .logo {
-          position: absolute;
-          bottom: 40px;
-          right: 40px;
-          width: 120px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="headline">20% OFF</div>
-      <img src="data:image/svg+xml;base64,${safeRead(path.resolve('./assets/logo.svg'))}" class="logo" />
-    </body>
-    </html>
+  <html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        width: 1080px;
+        height: 1080px;
+        position: relative;
+        background: white;
+      }
+      .headline {
+        position: absolute;
+        top: 400px;
+        left: 60px;
+        font-size: 72px;
+        font-weight: bold;
+        color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="headline">20% OFF</div>
+  </body>
+  </html>
   `;
 
   await page.setContent(html);
